@@ -11,7 +11,7 @@ The key prop is set to index, which is the index of the current letter in the ar
 We will import this component to main App and pass the guessedLetters prop to it.
 */
 
-export default function({ guessedLetters }) {
+export default function GuessedLetters({ guessedLetters }) {
     return (
         <div className='guessed-letters'>
             <h2>Guessed Letters</h2>
