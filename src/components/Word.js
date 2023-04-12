@@ -26,7 +26,7 @@ export default function Word({ word, guessedLetters }) {
                 return (
                     //add a conditional class
                     <span key={index} className={classes}>
-                        {guessedLetters.includes(letter) ? letter : `_`}      
+                        {guessedLetters.includes(letter) ? letter : `_ `}      
                     </span>
                 );
              })}

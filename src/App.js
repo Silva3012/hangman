@@ -6,28 +6,18 @@ import Word from './components/Word';
 import GuessedLetters from './components/GuessedLetters';
 import RemainingGuesses from './components/RemainingGuesses';
 import ResultMessage from './components/ResultMessage';
+import UserInput from './components/UserInput';
 import { getRandomWord } from './utils'; // Import the getRandomWord function from utils.js
-
-//Handler for game restart
-const handleRestart = () => {
-  console.log(`Restart button clicked`);
-}
-
-
-
-//Winner function
-function isWinner(word, guessedLetters) {
-  for (let letter of word) {
-    if(!guessedLetters.includes(letter)) {
-      return false;
-    }
-  }
-  return true;
-}
 
 export default function App() {
   // Initialize state for the chosen word
   const [word, setWord] = useState('');
+  // Initialize state to handle incorrect guesses
+  const [wrongGuesses, setWrongGuesses] = useState(0)
+  // Initialize state for list of guessed letters
+  const [guessedLetters, setGuessedLetters] = useState([]);
+  // Calculate the maximum wrong guesses allowed based on the length of the word
+  const maxWrongGuesses = Math.ceil(word.length / 2);
 
   // useEffect hook to fetch a random word when the component mounts
   useEffect(() => {
@@ -48,20 +38,52 @@ export default function App() {
       }
   }, []);
 
+  //Handler for user input 
+  const handleGuess = (guess) => {
+    //Check if the guessed letter is in the word
+    if (word.includes(guess)) {
+      // The guess is correct
+      // Update guessedLetters state with the new guess
+      setGuessedLetters([...guessedLetters, guess]);
+    } else {
+      // The guess is incorrect
+      // Update guessedLetters and incorrectGuesses state with the new guess
+      setGuessedLetters([...guessedLetters, guess])
+      setWrongGuesses(wrongGuesses + 1);
+    }
+  }
+
   
+  //Winner function
+  function isWinner(word, guessedLetters) {
+    for (let letter of word) {
+      if(!guessedLetters.includes(letter)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  //Handler for game restart
+  const handleRestart = () => {
+    setWord('');
+    setGuessedLetters([]);
+    setWrongGuesses(0);
+  }
 
   return (
     <div className="App">
       <Header restartGame={handleRestart}/>
-      <Hangman step={11} />
-      <Word word={word} guessedLetters={[]} />
-      <GuessedLetters guessedLetters={[]} />
-      <RemainingGuesses remaining={6} />
+      <Hangman step={wrongGuesses + 1} />
+      <UserInput  onGuess={handleGuess} guessedLetters={guessedLetters}/>
+      <Word word={word} guessedLetters={guessedLetters} />
+      <GuessedLetters guessedLetters={guessedLetters} />
+      <RemainingGuesses remaining={maxWrongGuesses - wrongGuesses} />
       <ResultMessage 
         isWinner={isWinner}
         word={word}
-        guessedLetters={[]}
-        maxWrongGuesses={6}
+        guessedLetters={guessedLetters}
+        maxWrongGuesses={maxWrongGuesses}
         handleRestart={handleRestart}
       />
     </div>
