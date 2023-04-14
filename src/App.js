@@ -17,7 +17,9 @@ export default function App() {
   // Initialize state for list of guessed letters
   const [guessedLetters, setGuessedLetters] = useState([]);
   // Calculate the maximum wrong guesses allowed based on the length of the word
-  const maxWrongGuesses = Math.ceil(word.length / 2);
+  const maxWrongGuesses = Math.ceil(word.length);
+  //State to keep track of the game
+  const [gameOver, setGameOver] = useState(false);
 
   // useEffect hook to fetch a random word when the component mounts
   useEffect(() => {
@@ -51,8 +53,14 @@ export default function App() {
       setGuessedLetters([...guessedLetters, guess])
       setWrongGuesses(wrongGuesses + 1);
     }
-  }
 
+    //Check if the game is over after each guess
+    if (checkWin(word, guessedLetters)) {
+      setGameOver(true);
+    } else if (checkLoss(maxWrongGuesses, wrongGuesses)) {
+      setGameOver(true);
+    }
+  };
   
   //Winner function
   function isWinner(word, guessedLetters) {
@@ -63,13 +71,48 @@ export default function App() {
     }
     return true;
   }
+
+   //useEffect for gameOver, to check whethe the game is over
+  //based on the current state of the values of guessedLetters, maxWrongGuesses, word, wrongGuesses and sets gameOver
+  useEffect(() => {
+    if (wrongGuesses >= maxWrongGuesses) {
+      setGameOver(true);
+    } else if (isWinner(word, guessedLetters)) {
+      setGameOver(true);
+    }
+  }, [guessedLetters, maxWrongGuesses, word, wrongGuesses]);
+
+  //Function to check if the game has been won
+  function checkWin(word, guessedLetters) {
+    for (let letter of word) {
+      if(!guessedLetters.includes(letter)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  //Function to check if the game has been lost
+  function checkLoss() {
+    const wrongGuesses = guessedLetters.filter(letter => !word.includes(letter)).length;
+    const isLoss = wrongGuesses >= maxWrongGuesses;
+
+    //Check if game is over
+    if(isLoss) {
+      setGameOver(true);
+    }
+  }
   
   //Handler for game restart
-  const handleRestart = () => {
-    setWord('');
+  const handleRestart = async () => {
+    const newWord = await getRandomWord();
+    setWord(newWord.toUpperCase());
     setGuessedLetters([]);
     setWrongGuesses(0);
+    setGameOver(false);
+    console.log(gameOver);
   }
+  
 
   return (
     <div className="App">
@@ -85,6 +128,7 @@ export default function App() {
         guessedLetters={guessedLetters}
         maxWrongGuesses={maxWrongGuesses}
         handleRestart={handleRestart}
+        gameOver={gameOver}
       />
     </div>
   );

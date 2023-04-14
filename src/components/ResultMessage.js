@@ -13,10 +13,14 @@ Then renders a message based on whether the user has won or lost and displays th
 number of wrong guesses and maximum number of allowed wrong guesses
 */
 
-export default function ResultMessage({ word, guessedLetters, maxWrongGuesses }) {
+export default function ResultMessage({ word, guessedLetters, maxWrongGuesses, gameOver}) {
     const wrongGuesses = guessedLetters.filter(letter => !word.includes(letter)).length;
     const isWinner = word.split('').every(letter => guessedLetters.includes(letter));
     const message = isWinner ? 'You won!' : 'You lost!';
+
+    if (!gameOver) {
+        return null;
+    }
 
     return (
         <div className='result-message'>
