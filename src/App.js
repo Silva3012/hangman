@@ -7,6 +7,7 @@ import GuessedLetters from './components/GuessedLetters';
 import RemainingGuesses from './components/RemainingGuesses';
 import ResultMessage from './components/ResultMessage';
 import UserInput from './components/UserInput';
+import HelpModal from './components/HelpModal';
 import { getRandomWord } from './utils'; // Import the getRandomWord function from utils.js
 
 export default function App() {
@@ -22,6 +23,8 @@ export default function App() {
   const [gameOver, setGameOver] = useState(null);
   //State for remaining guesses
   const [remainingGuesses, setRemainingGuesses] = useState(maxWrongGuesses);
+  //State for the help modal
+  const [showHelpModal, setShowHelpModal] = useState(false);
 
 
   // useEffect hook to fetch a random word when the component mounts
@@ -141,10 +144,18 @@ export default function App() {
     console.log(gameOver);
   }
   
+  //Modal handlers
+  const handleShowHelpModal = () => {
+    setShowHelpModal(true);
+  };
+
+  const handleCloseHelpModal = () => {
+    setShowHelpModal(false);
+  }
 
   return (
     <div className="App">
-      <Header restartGame={handleRestart}/>
+      <Header restartGame={handleRestart} showHelpModal={handleShowHelpModal}/>
       <Hangman step={wrongGuesses + 1} />
       <UserInput  onGuess={handleGuess} guessedLetters={guessedLetters}/>
       <Word word={word} guessedLetters={guessedLetters} />
@@ -159,6 +170,7 @@ export default function App() {
           handleRestart={handleRestart}
         />
       )}
+      <HelpModal show={showHelpModal} handleClose={handleCloseHelpModal} />
     </div>
   );
 }

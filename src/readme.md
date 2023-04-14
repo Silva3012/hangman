@@ -9,10 +9,17 @@ The game starts with a blanked out word and a number of blanks that correspond t
 The game ends either when the word is guessed correctly, or when the stick figure is completed.
 
 Instructions for Installation and Running
-Clone this repository to your local machine using git clone https://github.com/Silva3012/hangman.git
-Navigate to the root directory of the project.
-Run npm install to install the required dependencies.
-Run npm start to start the development server.
-Open your web browser and navigate to http://localhost:3000 to play the game.
-Enjoy the game!
+1. Clone this repository to your local machine using git clone https://github.com/Silva3012/hangman.git.
+
+2. Navigate to the root directory of the project.
+
+3. Run npm install to install the required dependencies.
+
+4. Run npm start to start the development server.
+
+5. Open your web browser and navigate to http://localhost:3000 to play the game.
+
+6. Enjoy the game!
+
+
 Note: This project was built using React, so you will need to have Node.js installed on your machine in order to run it.
