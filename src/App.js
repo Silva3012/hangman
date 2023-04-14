@@ -25,6 +25,9 @@ export default function App() {
   const [remainingGuesses, setRemainingGuesses] = useState(maxWrongGuesses);
   //State for the help modal
   const [showHelpModal, setShowHelpModal] = useState(false);
+  //State for hint
+  const [hintLetter, setHintLetter] = useState(null);
+
 
 
   // useEffect hook to fetch a random word when the component mounts
@@ -46,6 +49,18 @@ export default function App() {
         isMounted = false;
       }
   }, []);
+
+  //Handler for hint
+  function handleHint() {
+    // Find a letter that is in the word and hasn't been guessed yet
+    const possibleLetters = word.split("").filter(l => !guessedLetters.includes(l));
+    if (possibleLetters.length > 0) {
+      const hint = possibleLetters[Math.floor(Math.random() * possibleLetters.length)];
+      setGuessedLetters([...guessedLetters, hint]);
+      setWrongGuesses(wrongGuesses + 1);
+      setHintLetter(hint);
+    }
+  }
 
   //Handler for user input 
   const handleGuess = (guess) => {
@@ -157,7 +172,7 @@ export default function App() {
     <div className="App">
       <Header restartGame={handleRestart} showHelpModal={handleShowHelpModal}/>
       <Hangman step={wrongGuesses + 1} />
-      <UserInput  onGuess={handleGuess} guessedLetters={guessedLetters}/>
+      <UserInput  onGuess={handleGuess} guessedLetters={guessedLetters} onHint={handleHint}/>
       <Word word={word} guessedLetters={guessedLetters} />
       <GuessedLetters guessedLetters={guessedLetters} />
       <RemainingGuesses remaining={Math.max(maxWrongGuesses - wrongGuesses, 0)} />

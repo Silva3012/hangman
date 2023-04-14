@@ -49,14 +49,20 @@ export default function UserInput(props) {
                                 disabled={props.gameOver}
                             >
                                 Guess
+                            </button>{' '}
+                                <button 
+                                    type="button" 
+                                    className="btn btn-secondary" 
+                                    onClick={props.onHint}>
+                                Hint
                             </button>
                         </div>
                     </div> 
-                    {props.invalidGuess && (
+                    {/* {props.invalidGuess && (
                         <div className='alert alert-danger' role='alert'>
                             Please enter a valid letter that hasn't been guessed before.
                         </div>
-                    )} 
+                    )}  */}
                 </div>
             </form>
         </div>

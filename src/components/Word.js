@@ -10,7 +10,7 @@ word prop = the word that needs to be guessed
 guessedLetters prop = an array of the letters the user has guessed
 */
 
-export default function Word({ word, guessedLetters }) {
+export default function Word({ word, guessedLetters, hintLetter }) {
     return (
         <div className='word'>
             {/* Using the split method to convert `word` string into an array of chars
@@ -26,7 +26,7 @@ export default function Word({ word, guessedLetters }) {
                 return (
                     //add a conditional class
                     <span key={index} className={classes}>
-                        {guessedLetters.includes(letter) ? letter : `_ `}      
+                        {guessedLetters.includes(letter) ? letter : (hintLetter === letter ? hintLetter : '_ ')}      
                     </span>
                 );
              })}
