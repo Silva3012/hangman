@@ -12,7 +12,7 @@ export default function Header({ restartGame }) {
     return (
         <div className='header'>
             <h1>Hangman</h1>
-            <p>Guess the word by selecting the letters.</p>
+            <p>Guess the word by input a letter using your keyboard and pressing Enter or click Guess 🙂.</p>
             <Button variant='outline-primary' onClick={restartGame}>Restart Game</Button>
         </div>
     );

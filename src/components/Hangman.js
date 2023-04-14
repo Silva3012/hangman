@@ -51,7 +51,7 @@ export default function Hangman({ step }) {
             imagePath = 'state11.GIF';
             break;
         default:
-            imagePath = 'state0.GIF';
+            imagePath = 'state1.GIF';
             break;
     }
 

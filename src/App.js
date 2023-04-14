@@ -16,10 +16,13 @@ export default function App() {
   const [wrongGuesses, setWrongGuesses] = useState(0)
   // Initialize state for list of guessed letters
   const [guessedLetters, setGuessedLetters] = useState([]);
-  // Calculate the maximum wrong guesses allowed based on the length of the word
-  const maxWrongGuesses = Math.ceil(word.length);
+  //Number of guesses = number of state GIFs counting from 0
+  const maxWrongGuesses = 10;
   //State to keep track of the game
-  const [gameOver, setGameOver] = useState(false);
+  const [gameOver, setGameOver] = useState(null);
+  //State for remaining guesses
+  const [remainingGuesses, setRemainingGuesses] = useState(maxWrongGuesses);
+
 
   // useEffect hook to fetch a random word when the component mounts
   useEffect(() => {
@@ -31,6 +34,7 @@ export default function App() {
         const randomWord = await getRandomWord();
         // update the state with the fetched random word
         setWord(randomWord.toUpperCase());
+        
       }
     } 
     // call the fetchWord function when the component mounts, by passing an empty array as the second argument to useEffect
@@ -42,6 +46,23 @@ export default function App() {
 
   //Handler for user input 
   const handleGuess = (guess) => {
+    // Check if the game is already over
+    if (gameOver) {
+      return;
+    }
+
+    // Check if the game is over after updating the remaining guesses
+    if (checkWin(word, guessedLetters)) {
+      setGameOver(true);
+      return;
+    } else if (checkLoss(maxWrongGuesses, wrongGuesses)) {
+      setGameOver(true);
+      return;
+    }
+
+    // Update remaining guesses
+    setRemainingGuesses(Math.max(maxWrongGuesses - wrongGuesses - 1, 0));
+
     //Check if the guessed letter is in the word
     if (word.includes(guess)) {
       // The guess is correct
@@ -75,9 +96,13 @@ export default function App() {
    //useEffect for gameOver, to check whethe the game is over
   //based on the current state of the values of guessedLetters, maxWrongGuesses, word, wrongGuesses and sets gameOver
   useEffect(() => {
-    if (wrongGuesses >= maxWrongGuesses) {
+    if(gameOver === null) {
+      return;
+    }
+
+    if (wrongGuesses >= maxWrongGuesses || remainingGuesses < 1) {
       setGameOver(true);
-    } else if (isWinner(word, guessedLetters)) {
+    } else if (isWinner(word, guessedLetters) || remainingGuesses < 1) {
       setGameOver(true);
     }
   }, [guessedLetters, maxWrongGuesses, word, wrongGuesses]);
@@ -101,6 +126,8 @@ export default function App() {
     if(isLoss) {
       setGameOver(true);
     }
+
+    return isLoss;
   }
   
   //Handler for game restart
@@ -110,6 +137,7 @@ export default function App() {
     setGuessedLetters([]);
     setWrongGuesses(0);
     setGameOver(false);
+    setRemainingGuesses(maxWrongGuesses);
     console.log(gameOver);
   }
   
@@ -121,15 +149,16 @@ export default function App() {
       <UserInput  onGuess={handleGuess} guessedLetters={guessedLetters}/>
       <Word word={word} guessedLetters={guessedLetters} />
       <GuessedLetters guessedLetters={guessedLetters} />
-      <RemainingGuesses remaining={maxWrongGuesses - wrongGuesses} />
-      <ResultMessage 
-        isWinner={isWinner}
-        word={word}
-        guessedLetters={guessedLetters}
-        maxWrongGuesses={maxWrongGuesses}
-        handleRestart={handleRestart}
-        gameOver={gameOver}
-      />
+      <RemainingGuesses remaining={Math.max(maxWrongGuesses - wrongGuesses, 0)} />
+       {(gameOver || isWinner(word, guessedLetters) || checkLoss(maxWrongGuesses, wrongGuesses)) && (
+        <ResultMessage 
+          isWinner={isWinner(word, guessedLetters)}
+          word={word}
+          guessedLetters={guessedLetters}
+          maxWrongGuesses={maxWrongGuesses}
+          handleRestart={handleRestart}
+        />
+      )}
     </div>
   );
 }

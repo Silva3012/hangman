@@ -18,9 +18,9 @@ export default function ResultMessage({ word, guessedLetters, maxWrongGuesses, g
     const isWinner = word.split('').every(letter => guessedLetters.includes(letter));
     const message = isWinner ? 'You won!' : 'You lost!';
 
-    if (!gameOver) {
-        return null;
-    }
+    // if (!gameOver) {
+    //     return null;
+    // }
 
     return (
         <div className='result-message'>

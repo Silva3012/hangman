@@ -14,7 +14,7 @@ We will import this component to main App and pass the guessedLetters prop to it
 export default function GuessedLetters({ guessedLetters }) {
     return (
         <div className='guessed-letters'>
-            <h2>Guessed Letters</h2>
+            <h2>Guessed Letters:</h2>
             {guessedLetters.map((letter, index) => (
                 <Badge bg='secondary' key={index} className='guessed-letter'>
                     {letter}
